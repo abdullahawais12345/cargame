@@ -9,6 +9,8 @@
       margin: 0;
       padding: 0;
       box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
     }
 
     body {
@@ -254,20 +256,24 @@
       height: 70px;
       border-radius: 50%;
       border: none;
-      background: linear-gradient(145deg, #3a3a5c, #2a2a44);
+      background: linear-gradient(145deg, #667eea, #764ba2);
       color: white;
       font-size: 1.5rem;
       cursor: pointer;
-      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
-      transition: all 0.2s ease;
+      box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+      transition: all 0.1s ease;
       display: flex;
       align-items: center;
       justify-content: center;
+      user-select: none;
+      -webkit-user-select: none;
     }
 
-    .control-btn:active {
-      transform: scale(0.95);
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+    .control-btn:active,
+    .control-btn.active {
+      transform: scale(0.9);
+      box-shadow: 0 2px 10px rgba(102, 126, 234, 0.3);
+      background: linear-gradient(145deg, #5a6fd6, #6a4299);
     }
 
     .control-btn.pause-btn {
@@ -275,10 +281,13 @@
       height: 60px;
       background: linear-gradient(145deg, #feca57, #d69e2e);
       color: #1a1a2e;
+      box-shadow: 0 5px 20px rgba(254, 202, 87, 0.4);
     }
 
-    .control-btn.pause-btn:hover {
-      transform: scale(1.05);
+    .control-btn.pause-btn:active,
+    .control-btn.pause-btn.active {
+      transform: scale(0.9);
+      background: linear-gradient(145deg, #e6b74d, #c49028);
     }
 
     /* Pause Overlay */
@@ -1174,24 +1183,87 @@
       if (e.key === 'ArrowRight' || e.key === 'd') keys.right = false;
     });
 
-    // Pause button
-    document.getElementById('pauseBtn').addEventListener('click', togglePause);
-
     // Mobile controls
     const leftBtn = document.getElementById('leftBtn');
     const rightBtn = document.getElementById('rightBtn');
+    const pauseBtn = document.getElementById('pauseBtn');
 
-    leftBtn.addEventListener('touchstart', (e) => { e.preventDefault(); keys.left = true; });
-    leftBtn.addEventListener('touchend', () => { keys.left = false; });
-    leftBtn.addEventListener('mousedown', () => { keys.left = true; });
-    leftBtn.addEventListener('mouseup', () => { keys.left = false; });
-    leftBtn.addEventListener('mouseleave', () => { keys.left = false; });
+    // Left button controls
+    leftBtn.addEventListener('touchstart', (e) => {
+      e.preventDefault();
+      keys.left = true;
+      leftBtn.classList.add('active');
+    });
+    leftBtn.addEventListener('touchend', (e) => {
+      e.preventDefault();
+      keys.left = false;
+      leftBtn.classList.remove('active');
+    });
+    leftBtn.addEventListener('touchcancel', (e) => {
+      e.preventDefault();
+      keys.left = false;
+      leftBtn.classList.remove('active');
+    });
+    leftBtn.addEventListener('mousedown', (e) => {
+      e.preventDefault();
+      keys.left = true;
+      leftBtn.classList.add('active');
+    });
+    leftBtn.addEventListener('mouseup', (e) => {
+      e.preventDefault();
+      keys.left = false;
+      leftBtn.classList.remove('active');
+    });
+    leftBtn.addEventListener('mouseleave', () => {
+      keys.left = false;
+      leftBtn.classList.remove('active');
+    });
 
-    rightBtn.addEventListener('touchstart', (e) => { e.preventDefault(); keys.right = true; });
-    rightBtn.addEventListener('touchend', () => { keys.right = false; });
-    rightBtn.addEventListener('mousedown', () => { keys.right = true; });
-    rightBtn.addEventListener('mouseup', () => { keys.right = false; });
-    rightBtn.addEventListener('mouseleave', () => { keys.right = false; });
+    // Right button controls
+    rightBtn.addEventListener('touchstart', (e) => {
+      e.preventDefault();
+      keys.right = true;
+      rightBtn.classList.add('active');
+    });
+    rightBtn.addEventListener('touchend', (e) => {
+      e.preventDefault();
+      keys.right = false;
+      rightBtn.classList.remove('active');
+    });
+    rightBtn.addEventListener('touchcancel', (e) => {
+      e.preventDefault();
+      keys.right = false;
+      rightBtn.classList.remove('active');
+    });
+    rightBtn.addEventListener('mousedown', (e) => {
+      e.preventDefault();
+      keys.right = true;
+      rightBtn.classList.add('active');
+    });
+    rightBtn.addEventListener('mouseup', (e) => {
+      e.preventDefault();
+      keys.right = false;
+      rightBtn.classList.remove('active');
+    });
+    rightBtn.addEventListener('mouseleave', () => {
+      keys.right = false;
+      rightBtn.classList.remove('active');
+    });
+
+    // Pause button controls
+    pauseBtn.addEventListener('touchstart', (e) => {
+      e.preventDefault();
+      pauseBtn.classList.add('active');
+    });
+    pauseBtn.addEventListener('touchend', (e) => {
+      e.preventDefault();
+      pauseBtn.classList.remove('active');
+      if (gameState.isPlaying) togglePause();
+    });
+    pauseBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      if (gameState.isPlaying) togglePause();
+    });
 
     // Initialize
     loadGameData();
